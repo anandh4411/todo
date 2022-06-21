@@ -9,4 +9,4 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['id', 'task', 'estimated_time', 'elapsed_time', 'user']

@@ -12,6 +12,8 @@ class User(models.Model):
 
 class Task(models.Model):
     task = models.CharField(max_length=255)
-    estimated_time = models.TimeField(auto_now=False, auto_now_add=False, blank=False)
-    elapsed_time = models.TimeField(auto_now=False, auto_now_add=False, blank=False)
+    estimated_time = models.IntegerField(blank=False)
+    elapsed_time = models.IntegerField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return self.task

@@ -1,11 +1,16 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.hashers import make_password, check_password
-from home.models import User
+from home.models import Task, User
 
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html')
+    if 'user_id' in request.session:
+        user_id = request.session["user_id"]
+        queryset = Task.objects.filter(user__pk=user_id)
+        return render(request, 'home.html', {"tasks" : queryset})
+    else:
+        return redirect(signup)
 
 def login(request):
     if request.method == 'GET':
@@ -14,11 +19,16 @@ def login(request):
         email = request.POST['email']
         phone = request.POST['phone']
         password = request.POST['password']
+        queryset = User.objects.all()
 
-        if password:
-            pass
-        else:
-            return render(request, 'auth-failed.html')
+        for user in queryset:
+            if user.phone == phone:
+                if user.email == email:
+                    if check_password(password, user.password):
+                        request.session['user_id'] = user.id
+                        request.session['user_name'] = user.name
+                        return redirect(home)
+        return render(request, 'auth-failed.html')
 
 
 def signup(request):
@@ -41,3 +51,22 @@ def signup(request):
             return redirect(home)
         else:
             return render(request, 'auth-failed.html')
+
+def logout(request):
+    del request.session['user_id']
+    del request.session['user_name']
+    return redirect(home)
+        
+def task_add(request):
+    if request.method == 'POST':
+        task = request.POST['task']
+        estimated_time = request.POST['estimated_time']
+        user_id = request.session["user_id"]
+        user = User.objects.get(id=user_id)
+        task_instance = Task()
+        task_instance.task = task
+        task_instance.estimated_time = estimated_time
+        task_instance.elapsed_time = 0
+        task_instance.user = user
+        task_instance.save()
+        return redirect(home)

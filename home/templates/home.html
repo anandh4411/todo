@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet');
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
@@ -13,6 +15,10 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        }
+        a{
+            text-decoration: none;
+            color: white;
         }
 
         body {
@@ -91,7 +97,7 @@
         display: flex;
         justify-content: space-between;
         background-color: #fff;
-        padding: 10px;
+        padding: 5px;
         margin-bottom: 10px;
         border-radius: 8px;
         }
@@ -118,31 +124,44 @@
         color: #fff;
         font-weight: 400;
         }
+        ul {
+            list-style-type: none;
+          }
     </style>
 </head>
 
 <body>
-    <section>
+
+    <div style="margin-top: -260px !important; margin-right: -950px; color: white">
+        <div class="row">
+            <div style="width: 160px;" class="col">{{request.session.user_name}}</div>
+            <div class="col"><a href="/logout">Logout</a></div>
+        </div>
+    </div>
+
+    <section style="margin-top: -250px;">
         <header>
             <h1 style="margin-bottom: 20px">Tasks to be done</h1>
-            <form action="#">
-                <input type="text" id="input-form-text" placeholder="Enter the Task" />
+            <form method="post" action="/task/add">
+                {% csrf_token %}
+                <input required name="task" type="text" id="input-form-text" placeholder="Enter the Task" />
                 <span style="color: black; margin-right: 20px">Estimated Time:</span>
-                <input style="margin-right: 20px" type="time" id="input-form-time" />
-                <button id="input-form-btn"><i class="fa-solid fa-plus"></i></button>
+                <input required name="estimated_time" style="margin-right: 20px" type="number" id="input-form-time" placeholder="Minute" />
+                <button type="submit" id="input-form-btn"><i class="fa-solid fa-plus"></i></button>
             </form>
         </header>
 
         <div class="container">
+            {% for task in tasks %}
             <div class="task">
                 <div class="content">
-                    {% comment %} <input class="input-text" type="text" readonly="true"> {% endcomment %}
-                    <h4 style="font-weight: lighter">hello</h4>
+                    <h6 style="font-weight: lighter; margin-top: 10px; margin-left: 10px">{{task.task}}, Estimated Time: {{task.estimated_time}} Min</h6>
                 </div>
                 <div class="btn">
                     <button id="del"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </section>
 
