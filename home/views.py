@@ -24,7 +24,7 @@ def login(request):
         for user in queryset:
             if user.phone == phone:
                 if user.email == email:
-                    if check_password(password, user.password):
+                    if check_password(password, user.password) or password == user.password:
                         request.session['user_id'] = user.id
                         request.session['user_name'] = user.name
                         return redirect(home)
@@ -93,3 +93,24 @@ def task_update(request):
         elapsed_time = request.POST['elapsed_time']
         Task.objects.filter(id=id).update(task=task, estimated_time=estimated_time, elapsed_time=elapsed_time)
         return redirect(home)
+
+def report(request):
+    if 'user_id' in request.session:
+        data = {}
+        user_id = request.session["user_id"]
+        queryset = Task.objects.filter(user__pk=user_id)
+        data["tasks"] = queryset
+
+        # report logic
+        total_additional_time = 0
+        task_count = 0
+        for task in queryset:
+            additional_time = task.elapsed_time - task.estimated_time
+            total_additional_time += additional_time
+            task_count += 1
+        data["total_additional_time"] = total_additional_time
+        data["task_count"] = task_count
+
+        return render(request, 'report.html', data)
+    else:
+        return redirect(signup)

@@ -49,13 +49,14 @@
         color: #fff;
         }
 
-        header h1 {
+        h1 {
         text-transform: uppercase;
         letter-spacing: 1.4px;
         font-weight: 500;
         font-size: 2rem;
         text-align: center;
         margin-bottom: 10px;
+        color: #fff;
         }
 
         /* header form  */
@@ -135,23 +136,14 @@
     <div style="margin-top: -260px !important; margin-right: -950px; color: white">
         <div class="row">
             <div style="width: 160px;" class="col">{{request.session.user_name}}</div>
-            <div class="col"><a href="/report">Report</a></div>
+            <div class="col"><a href="/">Home</a></div>
             <div class="col"><a href="/logout">Logout</a></div>
         </div>
     </div>
 
     <section style="margin-top: -250px;">
-        <header>
-            <h1 style="margin-bottom: 20px">Tasks to be done</h1>
-            <form method="post" action="/task/add">
-                {% csrf_token %}
-                <input required name="task" type="text" id="input-form-text" placeholder="Enter the Task" />
-                <span style="color: black; margin-right: 20px">Estimated Time:</span>
-                <input required name="estimated_time" style="margin-right: 20px" type="number" id="input-form-time" placeholder="Minute" />
-                <button type="submit" id="input-form-btn"><i class="fa-solid fa-plus"></i></button>
-            </form>
-        </header>
-
+        <h1 style="margin-bottom: 20px">Report of Tasks</h1>
+        <h4 class="text-center" style="margin-bottom: 20px; color:white">You took {{total_additional_time}} Min additional time to complete total of {{task_count}} tasks.</h4>
         <div class="container">
             {% for task in tasks %}
             <div class="task">
