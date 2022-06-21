@@ -155,10 +155,11 @@
             {% for task in tasks %}
             <div class="task">
                 <div class="content">
-                    <h6 style="font-weight: lighter; margin-top: 10px; margin-left: 10px">{{task.task}}, Estimated Time: {{task.estimated_time}} Min</h6>
+                    <h6 style="font-weight: lighter; margin-top: 10px; margin-left: 10px">{{task.task}}, Estimated Time: {{task.estimated_time}} Min , Elapsed Time: {{task.elapsed_time}} Min</h6>
                 </div>
                 <div class="btn">
-                    <button id="del"><i class="fa-solid fa-trash-can"></i></button>
+                    <a href="/task/update/?id={{task.id}}" id="del"><i class="fa-solid fa-check"></i></a>
+                    <a href="/task/delete/?id={{task.id}}" id="del"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </div>
             {% endfor %}

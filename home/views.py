@@ -70,3 +70,26 @@ def task_add(request):
         task_instance.user = user
         task_instance.save()
         return redirect(home)
+
+def task_delete(request):
+    id = request.GET.get('id', None)
+    task = Task.objects.get(id=id)
+    task.delete()
+    return redirect(home)
+
+def task_update(request):
+    if request.method == 'GET':
+        data = {}
+        id = request.GET.get('id', None)
+        data["id"] = id
+        task_instance = Task.objects.get(id=id)
+        data["task"] = task_instance
+        return render(request, 'task-update.html', data)
+
+    if request.method == 'POST':
+        id = request.POST['id']
+        task = request.POST['task']
+        estimated_time = request.POST['estimated_time']
+        elapsed_time = request.POST['elapsed_time']
+        Task.objects.filter(id=id).update(task=task, estimated_time=estimated_time, elapsed_time=elapsed_time)
+        return redirect(home)
